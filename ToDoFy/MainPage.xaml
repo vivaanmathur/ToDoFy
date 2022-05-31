@@ -10,7 +10,7 @@
             VerticalOptions="Center">
 
             <Label 
-                Text="ToDoFy"
+                Text="Welcome to ToDoFy."
             
                 FontSize="32"
                 HorizontalOptions="Center" />
