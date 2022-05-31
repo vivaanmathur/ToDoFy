@@ -93,7 +93,7 @@ jobs:
       shell: pwsh
       run: |
         # On Windows, we use msbuild instead of dotnet build
-        msbuild ToDoFy/ToDoFy.csproj -r -p:Configuration=Debug
+        msbuild ToDoFy/ToDoFy.csproj -r p:TargetFramework=net6.0-windows10.0.19041.0
     
     # - name: Upload build artifacts
     #   uses: actions/upload-artifact@v2
