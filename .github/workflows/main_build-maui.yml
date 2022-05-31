@@ -87,7 +87,7 @@ jobs:
 
     - name: Restore NuGet packages
       shell: pwsh
-      run: dotnet restore ToDoFy/ToDoFy.csproj
+      run: dotnet restore ToDoFy/ToDoFy.csproj --runtime win10-x64 -p:TargetFramework=net6.0-windows10.0.19041 /p:RuntimeIdentifier="win10-x64"
 
     - name: Build Maui WinUI project
       shell: pwsh
