@@ -45,13 +45,13 @@ jobs:
 
     - name: Build Maui Android project
       shell: pwsh
-      run: dotnet build ToDoFy/ToDoFy.csproj -c Debug -f net6.0-android --no-restore
+      run: dotnet publish ToDoFy/ToDoFy.csproj -c Release -f net6.0-android --no-restore
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
        name: android-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: '*Android\**\*-Signed.apk'
+       path: 'ToDoFy/bin/Release/'
 
 # Windows
   maui-windows:
@@ -91,14 +91,14 @@ jobs:
     - name: Build Maui WinUI project
       shell: pwsh
       run: |
-        # On Windows, we use msbuild instead of dotnet build
-        msbuild ToDoFy/ToDoFy.csproj -r -p:TargetFramework=net6.0-windows10.0.19041.0
+        # msbuild ToDoFy/ToDoFy.csproj -r -p:TargetFramework=net6.0-windows10.0.19041.0
+        dotnet publish ToDoFy/ToDoFy.csproj -f net6.0-windows10.0.19041.0 -c Release
     
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
        name: windows-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: '*Windows\**\*.msix'
+       path: 'ToDoFy/bin/Release/'
 
 
 # iOS
@@ -142,13 +142,13 @@ jobs:
     
     - name: Build MAUI iOS project
       shell: bash
-      run: dotnet build ToDoFy/ToDoFy.csproj -c Debug -f net6.0-ios --no-restore
+      run: dotnet publish ToDoFy/ToDoFy.csproj -c Release -f net6.0-ios --no-restore
       
     - name: Upload iOS build artifacts
       uses: actions/upload-artifact@v2
       with:
        name: ios-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: '*iOS/**/*.app/**' 
+       path: 'ToDoFy/bin/Release' 
 
 # macOS
   maui-macos:
@@ -191,10 +191,10 @@ jobs:
     
     - name: Build MAUI MacCatalyst project
       shell: bash
-      run: dotnet build ToDoFy/ToDoFy.csproj -c Debug -f net6.0-maccatalyst --no-restore
+      run: dotnet publish ToDoFy/ToDoFy.csproj -c Release -f net6.0-maccatalyst --no-restore
     
     - name: Upload iOS build artifacts
       uses: actions/upload-artifact@v2
       with:
        name: maccatalyst-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: '*maccatalyst/**/*.app/**'
+       path: 'ToDoFy/bin/Release/maccatalyst/**/*.app/**'
