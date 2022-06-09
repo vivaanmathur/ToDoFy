@@ -1,14 +1,14 @@
-# This is a basic workflow to help you get started with Actions
+# Publish CI
 
-name: CI MAUI 
+name: Publish CI
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  #push:
+    #branches: [ master ]
+  #pull_request:
+    #branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '6.x'
 
     - name: Generate version number using date and run number
       shell: pwsh
@@ -51,7 +51,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
        name: android-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: 'ToDoFy/bin/Release/'
+       path: 'ToDoFy/bin/Release/net6.0-android/publish/'
 
 # Windows
   maui-windows:
@@ -65,7 +65,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '6.x'
 
     # Needed for Windows build
     - name: Setup MSBuild.exe
@@ -98,7 +98,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
        name: windows-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: 'ToDoFy/bin/Release/'
+       path: 'ToDoFy/bin/Release/net6.0-windows10.0.19041.0/win10-x64/'
 
 
 # iOS
@@ -115,23 +115,21 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '13.3'
+        xcode-version: '13.4'
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '6.x'
 
     - name: Generate version number using date and run number
+      shell: pwsh
       id: version-creator
-      shell: bash
       run: |
-        buildDay=`date +%Y.%m%d`
-        echo $buildDay
-        runNum=${{ env.GITHUB_RUN_NUMBER }}
-        ver="${buildDay}.${runNum}.0"
-        echo $ver
-        echo "APP_VERSION=$ver" >> $GITHUB_ENV
+        $buildDay = Get-Date -Format "yyyy.Mdd"
+        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
+        echo "::set-output name=APP_VERSION::$ver"
+        
     - name: Install MAUI workloads
       shell: pwsh
       run: dotnet workload install maui --ignore-failed-sources
@@ -164,23 +162,21 @@ jobs:
 
     - uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: '13.3'
+        xcode-version: '13.4'
 
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0.x'
-
+        dotnet-version: '6.x'
+        
     - name: Generate version number using date and run number
+      shell: pwsh
       id: version-creator
-      shell: bash
       run: |
-        buildDay=`date +%Y.%m%d`
-        echo $buildDay
-        runNum=${{ env.GITHUB_RUN_NUMBER }}
-        ver="${buildDay}.${runNum}.0"
-        echo $ver
-        echo "APP_VERSION=$ver" >> $GITHUB_ENV
+        $buildDay = Get-Date -Format "yyyy.Mdd"
+        $ver = $buildDay + "." + $env:GITHUB_RUN_NUMBER + ".0"
+        echo "::set-output name=APP_VERSION::$ver"
+
     - name: Install MAUI workloads
       shell: pwsh
       run: dotnet workload install maui --ignore-failed-sources
@@ -197,4 +193,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
        name: maccatalyst-v${{ steps.version-creator.outputs.APP_VERSION }}-artifacts
-       path: 'ToDoFy/bin/Release/'
+       path: 'ToDoFy/bin/Release/net6.0-maccatalyst/publish/'
